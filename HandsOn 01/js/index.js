@@ -22,7 +22,8 @@ form.addEventListener("submit", (e) => {
     //primeiro valida se existe algo "checkado"
     //pego o value do elemento
     let radio = document.querySelector('input[name="option"]:checked');
-    let checkbox = document.querySelector('input[name="option"]:checked');
+    let checkbox = document.querySelectorAll('input[name="option"]:checked');
+    
     let textarea = document.getElementById("textarea").value;
     let usuario = {
         'email': email,
