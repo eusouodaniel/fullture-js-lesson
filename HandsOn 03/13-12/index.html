@@ -7,14 +7,37 @@
     </head>
     <body>
         <select id="filtro">
-            <option value="todas">Todos</option>
+            <option value="todos">Todos</option>
             <option value="fiat">Fiat</option>
             <option value="ford">Ford</option>
             <option value="chevrolet">Chevrolet</option>
         </select>
+        <select id="selectModelo">
+            
+        </select>
         <input type="text" name="filtroTipo" id="filtroTipo" />
+        <br/><br/>
+        <form action="" id="form">
+            <input type="text" name="marca" id="marca" placeholder="Marca" />
+            <br/>
+            <select name="tipo" id="tipo">
+                <option value="Baixo custo">Baixo custo</option>
+                <option value="Médio custo">Médio custo</option>
+                <option value="Alto custo">Alto custo</option>
+            </select>
+            <br/>
+            <input type="text" name="modelo" id="modelo" placeholder="Modelo" />
+            <br/>
+            <input type="number" name="ano" id="ano" placeholder="Ano" />
+            <br/>
+            <input type="number" name="preco" id="preco" placeholder="Preço" />
+            <br/>
+            <br/>
+            <input type="submit" value="Cadastrar carro">
+        </form>
         <div id="carros">
             
         </div>
+        
     </body>
 </html>
