@@ -65,3 +65,26 @@ Adicionar evento DOMContentLoaded
 - Senha não está criptografada
 - Validação fraca via SessionStorage
 - Exemplos de CSS com classe
+
+//como estamos?
+dados estão em localStorage
+faz sentido ter cadastro de usuário?
+DOMContentLoaded - aplicabilidade
+validar login
+senhas estão abertas - resolvido
+- 12345678 - hash
+Exemplos de CSS com classe
+Salvar classe de acordo com condição
+- localStorage salvar classe
+- iniciar js->buscar dados no localStorage->aplicar de acordo com condição
+- refatoração
+- conversão de senhas no localStorage
+- incrementar acesso ao site toda vez que logar
+
+Usuarios
+   - email
+   - senha
+   - tipo
+      - Tipo A - blue
+      - Tipo B - red
+      - Tipo C - green

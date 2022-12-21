@@ -1,24 +1,18 @@
+const TODOS = "todos";
+const LOGIN_PAGE = "login.html"
+
 document.addEventListener("DOMContentLoaded", () => {
-    let bemVindo = document.getElementById("bemVindo");
-    bemVindo.innerHTML = `Bem-vindo ${localStorage.getItem("email")}`;
-    if (localStorage.getItem("logado") == 'true') {
-        const TODOS = "todos";
+    if (verificaLogin) {
+        this.preencheBemVindo();
 
         let marca = '';
         let tipo = '';
 
-        let carros = JSON.parse(localStorage.getItem("carros"))
         let divCarros = document.getElementById("carros");
+        const carros = this.recuperaCarros();
 
         carros.forEach(carro => {
-            divCarros.innerHTML += `
-                <h3>${carro.marca}</h3>
-                <p>${carro.tipo}</p>
-                <p>${carro.modelo}</p>
-                <p>${carro.ano}</p>
-                <p>${carro.preco}</p>
-                <br>
-            `
+            divCarros.innerHTML  += this.populaCarros(carro)
         });
 
         let filtro = document.getElementById("filtro");
@@ -31,32 +25,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 let marcaNormalizada = carro.marca.toLowerCase();
                 let selectNormalizado = e.target.value.toString().toLowerCase();
                 let tipoCarro = carro.tipo.toLowerCase();
+
                 if (marcaNormalizada == selectNormalizado
                     && tipoCarro.indexOf(tipo) != -1) {
-                    
-                    let option = `<option value="${carro.modelo.toLowerCase()}">${carro.modelo}</option>`
-                    selectModelo.innerHTML += option;
-
+                    selectModelo.innerHTML += this.criarOption(carro.modelo);;
                     marca = selectNormalizado;
-                    divCarros.innerHTML += `
-                        <h3>${carro.marca}</h3>
-                        <p>${carro.tipo}</p>
-                        <p>${carro.modelo}</p>
-                        <p>${carro.ano}</p>
-                        <p>${carro.preco}</p>
-                        <br>
-                    `
+                    divCarros.innerHTML += this.populaCarros(carro)
                 } else if (selectNormalizado == TODOS) {
-                    let option = `<option value="${carro.modelo.toLowerCase()}">${carro.modelo}</option>`
-                    selectModelo.innerHTML += option;
-                    divCarros.innerHTML += `
-                        <h3>${carro.marca}</h3>
-                        <p>${carro.tipo}</p>
-                        <p>${carro.modelo}</p>
-                        <p>${carro.ano}</p>
-                        <p>${carro.preco}</p>
-                        <br>
-                    `
+                    selectModelo.innerHTML += this.criarOption(carro.modelo);
+                    divCarros.innerHTML += this.populaCarros(carro)
                 }
             })
         });
@@ -68,14 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             carros.forEach(carro => {
                 let modeloNormalizado = carro.modelo.toLowerCase();
                 if (seletNormalizado == modeloNormalizado) {
-                    divCarros.innerHTML += `
-                        <h3>${carro.marca}</h3>
-                        <p>${carro.tipo}</p>
-                        <p>${carro.modelo}</p>
-                        <p>${carro.ano}</p>
-                        <p>${carro.preco}</p>
-                        <br>
-                    `
+                    divCarros.innerHTML += this.populaCarros(carro)
                 }
             })
         })
@@ -86,25 +56,19 @@ document.addEventListener("DOMContentLoaded", () => {
             carros.forEach(carro => {
                 let tipoCarro = carro.tipo.toLowerCase();
                 let inputNormalizado = e.target.value.toString().toLowerCase();
-                let marcaCarro = carro.marca.toLowerCase()
+                let marcaCarro = carro.marca.toLowerCase();
 
                 if (tipoCarro.indexOf(inputNormalizado) != -1
                     && marca 
                     && marcaCarro == marca) {
                     tipo = inputNormalizado;
-                    divCarros.innerHTML += `
-                        <h3>${carro.marca}</h3>
-                        <p>${carro.tipo}</p>
-                        <p>${carro.modelo}</p>
-                        <p>${carro.ano}</p>
-                        <p>${carro.preco}</p>
-                        <br>
-                    `
+                    divCarros.innerHTML += this.populaCarros(carro);
                 }
             })
         })
 
         let form = document.querySelector("form")
+        let btnCarroSubmit = document.getElementById("btnCarroSubmit");
         form.addEventListener("submit", (e) => {
             e.preventDefault();
             let marca = document.getElementById("marca").value;
@@ -112,29 +76,79 @@ document.addEventListener("DOMContentLoaded", () => {
             let modelo = document.getElementById("modelo").value;
             let ano = document.getElementById("ano").value;
             let preco = document.getElementById("preco").value;
-
-            let carro = {
-                marca,
-                tipo,
-                modelo,
-                ano,
-                preco
-            }
-            form.reset();
             
-            carros.push(carro);
-            localStorage.setItem("carros", JSON.stringify(carros));
+            if (this.validaCadastroDeCarro(marca,tipo,modelo,ano,preco)) {
+                let carro = { marca, tipo, modelo, ano, preco };
 
-            alert("Carro foi cadastrado")
+                form.reset();
+                
+                carros.push(carro);
+                localStorage.setItem("carros", JSON.stringify(carros));
+                btnCarroSubmit.classList.remove("btnRed"); 
+                btnCarroSubmit.classList.add("btnGreen");
+                alert("Carro foi cadastrado")
+            } else {
+                btnCarroSubmit.classList.remove("btnGreen");
+                btnCarroSubmit.classList.add("btnRed");
+                alert("Formulário possui erros")
+            }
         })
         let btnSair = document.getElementById("sair");
         btnSair.addEventListener("click", () => {
             localStorage.removeItem("email");
             localStorage.removeItem("logado");
-            window.location = "login.html"
-        })
-
+            window.location = LOGIN_PAGE;
+        });
+        
     } else {
-        window.location = "login.html";
+        window.location = LOGIN_PAGE;
     }
 });
+
+function verificaLogin() {
+    return localStorage.getItem("logado") == 'true';
+}
+
+function preencheBemVindo() {
+    let bemVindo = document.getElementById("bemVindo");
+    bemVindo.innerHTML = `Bem-vindo ${this.recuperaEmail()}`;
+
+    if(this.verificaTipo() == "A") {
+        bemVindo.className = "labelBlue"
+    } else if (this.verificaTipo() == "B") {
+        bemVindo.className = "labelRed"
+    } else {
+        bemVindo.className = "labelGreen"
+    }
+}
+
+function recuperaEmail() {
+    return localStorage.getItem("email");
+}
+
+function verificaTipo() {
+    return localStorage.getItem("tipo");
+}
+
+function recuperaCarros() {
+    return JSON.parse(localStorage.getItem("carros"));
+}
+
+function populaCarros(carro) {
+    return `
+        <h3>${carro.marca}</h3>
+        <p>${carro.tipo}</p>
+        <p>${carro.modelo}</p>
+        <p>${carro.ano}</p>
+        <p>${carro.preco}</p>
+        <br>
+    `
+}
+
+function criarOption(modelo) {
+    return `<option value="${modelo.toLowerCase()}">${modelo}</option>`
+}
+
+function validaCadastroDeCarro(marca, tipo, modelo, ano, preco) {
+    return marca && tipo && modelo && ano && preco;
+}
