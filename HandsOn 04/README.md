@@ -85,6 +85,6 @@ Usuarios
    - email
    - senha
    - tipo
-      - Tipo A - blue
-      - Tipo B - red
-      - Tipo C - green
+      - Tipo A - blue > 10
+      - Tipo B - red >= 5 e =< 10
+      - Tipo C - green < 5

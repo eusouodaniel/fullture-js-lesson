@@ -18,17 +18,21 @@ function login(e) {
     const email = document.getElementById("email").value;
     const senha = document.getElementById("password").value;
 
-    const usuarios = this.recuperaUsuarios();
+    const usuarios = recuperaUsuarios();
     let tipoDoUsuario = "";
 
     usuarios.forEach(usuario => {
-        if (email == usuario.email && this.criptografaSenha(senha) == usuario.password) {
+        if (email == usuario.email && criptografaSenha(senha) == usuario.password) {
             tipoDoUsuario = usuario.tipo;
+
+            let numeroLogin = usuario.numeroLogin;
+            usuario.numeroLogin = numeroLogin++;
+            usuarios.push(usuario)
         }
     })
 
     if (tipoDoUsuario) {
-        this.salvarDados(email, tipoDoUsuario);
+        salvarDados(email, tipoDoUsuario);
         window.location = INDEX_PAGINA;
     }
 }
